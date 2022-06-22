@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Form, Button } from 'semantic-ui-react'
 import Auth from '../auth/Auth'
-import { getUploadUrl, uploadFile } from '../api/todos-api'
+import { getUploadUrl, uploadFile } from '../api/blogs-api'
 
 enum UploadState {
   NoUpload,
@@ -9,25 +9,25 @@ enum UploadState {
   UploadingFile,
 }
 
-interface EditTodoProps {
+interface EditBlogProps {
   match: {
     params: {
-      todoId: string
+      blogId: string
     }
   }
   auth: Auth
 }
 
-interface EditTodoState {
+interface EditBlogState {
   file: any
   uploadState: UploadState
 }
 
-export class EditTodo extends React.PureComponent<
-  EditTodoProps,
-  EditTodoState
+export class EditBlog extends React.PureComponent<
+  EditBlogProps,
+  EditBlogState
 > {
-  state: EditTodoState = {
+  state: EditBlogState = {
     file: undefined,
     uploadState: UploadState.NoUpload
   }
@@ -50,8 +50,12 @@ export class EditTodo extends React.PureComponent<
         return
       }
 
+      console.log('IdToken ' + this.props.auth.getIdToken())
+      console.log('BlogId ' + this.props.match.params.blogId)
       this.setUploadState(UploadState.FetchingPresignedUrl)
-      const uploadUrl = await getUploadUrl(this.props.auth.getIdToken(), this.props.match.params.todoId)
+      const uploadUrl = await getUploadUrl(this.props.auth.getIdToken(), this.props.match.params.blogId)
+
+      console.log('Upload url ' + uploadUrl)
 
       this.setUploadState(UploadState.UploadingFile)
       await uploadFile(uploadUrl, this.state.file)

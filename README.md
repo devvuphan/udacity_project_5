@@ -84,7 +84,7 @@ It should return a new Blog item that looks like this:
 ```json
 {
   "item": {
-    "todoId": "123",
+    "blogId": "123",
     "createdAt": "2019-07-27T20:01:45.424Z",
     "title": "Get a domain",
     "content": "Give your blog the perfect home. Get a blogspot.com domain or buy a custom domain with just a few clicks",
@@ -181,11 +181,11 @@ Once you have finished developing your application, please set `apiId` and Auth0
 
 # Suggestions
 
-To store TODO items, you might want to use a DynamoDB table with local secondary index(es). A create a local secondary index you need to create a DynamoDB resource like this:
+To store Blog items, you might want to use a DynamoDB table with local secondary index(es). A create a local secondary index you need to create a DynamoDB resource like this:
 
 ```yml
 
-TodosTable:
+BlogsTable:
   Type: AWS::DynamoDB::Table
   Properties:
     AttributeDefinitions:
@@ -201,7 +201,7 @@ TodosTable:
       - AttributeName: sortKey
         KeyType: RANGE
     BillingMode: PAY_PER_REQUEST
-    TableName: ${self:provider.environment.TODOS_TABLE}
+    TableName: ${self:provider.environment.BLOGS_TABLE}
     LocalSecondaryIndexes:
       - IndexName: ${self:provider.environment.INDEX_NAME}
         KeySchema:
@@ -251,7 +251,7 @@ npm install
 npm run start
 ```
 
-This should start a development server with the React application that will interact with the serverless TODO application.
+This should start a development server with the React application that will interact with the serverless Blog application.
 
 # Postman collection
 
