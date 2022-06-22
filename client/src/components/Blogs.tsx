@@ -107,7 +107,7 @@ export class Blogs extends React.PureComponent<BlogsProps, BlogsState> {
 
         {this.renderCreateBlogInput()}
 
-        <Header as="h1">Your blogs</Header>
+        <Header as="h1" style = {{marginTop: 40}}>Your blogs</Header>
 
         {this.renderBlogs()}
       </div>
@@ -167,34 +167,32 @@ export class Blogs extends React.PureComponent<BlogsProps, BlogsState> {
       <List>
         {this.state.blogs.map((blog, pos) => {
             return (
-              <div key={blog.blogId} flex-direction="row">
-                <div>
-                  <div>
-                    {blog.title}
-                  </div>
-                  <div style={{marginTop: 10}}>
-                    {blog.content}
-                  </div>
-                  <div key={blog.blogId} flex-direction="row" style={{marginTop: 10}}>
-                    <Button
-                      icon
-                      color="blue"
-                      onClick={() => this.onEditButtonClick(blog.blogId)}
-                    >
-                      <Icon name="pencil" />
-                    </Button>
-                    <Button
-                      icon
-                      color="red"
-                      style={{marginTop: 10}}
-                      onClick={() => this.onBlogDelete(blog.blogId)}
-                    >
-                      <Icon name="delete" />
-                    </Button>
-                  </div>
-                  {blog.attachmentUrl && (
+              <div key={blog.blogId} style={{marginTop: 20}}>
+                {blog.attachmentUrl && (
                     <Image src={blog.attachmentUrl} size="small" wrapped />
                   )}
+                <div style={{marginTop: 10}}>
+                  <h3>{blog.title}</h3>
+                </div>
+                <div style={{marginTop: 10}}>
+                  {blog.content}
+                </div>
+                <div key={blog.blogId} style={{marginTop: 10}}>
+                  <Button
+                    icon
+                    color="blue"
+                    onClick={() => this.onEditButtonClick(blog.blogId)}
+                  >
+                    <Icon name="pencil" />
+                  </Button>
+                  <Button
+                    icon
+                    color="red"
+                    style={{marginTop: 10}}
+                    onClick={() => this.onBlogDelete(blog.blogId)}
+                  >
+                    <Icon name="delete" />
+                  </Button>
                 </div>
                 <Divider />
               </div>
