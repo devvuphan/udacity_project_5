@@ -13,7 +13,7 @@ export const handler = middy(
     const attachmentId = uuid.v4()
     const uploadUrl = await generateAttachmentUrl(attachmentId)
 
-    await updateAttachmentUrl(getUserId(event), event.pathParameters.todoId, attachmentId)
+    await updateAttachmentUrl(getUserId(event), event.pathParameters.blogId, attachmentId)
 
     return {
       statusCode: 200,

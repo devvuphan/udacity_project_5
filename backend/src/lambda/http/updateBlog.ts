@@ -13,7 +13,7 @@ export const handler = middy(
 
     const updatedBlog: UpdateBlogRequest = JSON.parse(event.body)
 
-    await updateBlog(getUserId(event), event.pathParameters.todoId, updatedBlog)
+    await updateBlog(getUserId(event), event.pathParameters.blogId, updatedBlog)
 
     return {
       statusCode: 200,
