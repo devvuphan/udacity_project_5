@@ -3,7 +3,7 @@ import 'source-map-support/register'
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
-import { generateAttachmentUrl, updateAttachmentUrl } from '../../businessLogic/todos'
+import { generateAttachmentUrl, updateAttachmentUrl } from '../../businessLogic/blogs'
 import { getUserId } from '../utils'
 import * as uuid from 'uuid'
 

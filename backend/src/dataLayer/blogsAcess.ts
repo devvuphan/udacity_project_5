@@ -2,38 +2,38 @@ import * as AWS from 'aws-sdk'
 const AWSXRay = require('aws-xray-sdk')
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 import { createLogger } from '../utils/logger'
-import { TodoItem } from '../models/TodoItem'
-import { TodoUpdate } from '../models/TodoUpdate';
+import { BlogItem } from '../models/BlogItem'
+import { UpdateBlogRequest } from '../requests/UpdateBlogRequest'
 
 const XAWS = AWSXRay.captureAWS(AWS)
 
-const logger = createLogger('TodosAccess')
+const logger = createLogger('BlogsAccess')
 
-export class TodosAccess {
+export class BlogsAccess {
     constructor(
       private readonly docClient: DocumentClient = createDynamoDBClient(),
-      private readonly todosTable = process.env.TODOS_TABLE
+      private readonly blogsTable = process.env.BLOGS_TABLE
     ) {}
   
-    async getTodoItem(userId: string, todoId: string): Promise<TodoItem> {
+    async getBlogItem(userId: string, blogId: string): Promise<BlogItem> {
       return (
         await this.docClient
           .get({
-            TableName: this.todosTable,
+            TableName: this.blogsTable,
             Key: {
               userId,
-              todoId
+              blogId
             }
           })
           .promise()
-      ).Item as TodoItem
+      ).Item as BlogItem
     }
   
-    async getAllTodos(userId: string): Promise<TodoItem[]> {
-      logger.info('Getting all todos')
+    async getAllBlogs(userId: string): Promise<BlogItem[]> {
+      logger.info('Getting all blogs')
       const result = await this.docClient
         .query({
-          TableName: this.todosTable,
+          TableName: this.blogsTable,
           KeyConditionExpression: 'userId = :userId',
           ExpressionAttributeValues: {
             ':userId': userId
@@ -41,66 +41,65 @@ export class TodosAccess {
         })
         .promise()
   
-      return result.Items as TodoItem[]
+      return result.Items as BlogItem[]
     }
   
-    async createTodo(todoItem: TodoItem): Promise<TodoItem> {
-      logger.info('Create a new todo')
+    async createBlog(blogItem: BlogItem): Promise<BlogItem> {
+      logger.info('Create a new blog')
       await this.docClient
         .put({
-          TableName: this.todosTable,
-          Item: todoItem
+          TableName: this.blogsTable,
+          Item: blogItem
         })
         .promise()
-      return todoItem
+      return blogItem
     }
   
-    async updateTodoItem(userId: string, todoId: string, todoUpdate: TodoUpdate) {
-      logger.info(`Updating todo ${todoId} with ${JSON.stringify(todoUpdate)}`)
+    async updateBlogItem(userId: string, blogId: string, blogUpdate: UpdateBlogRequest) {
+      logger.info(`Updating blog ${blogId} with ${JSON.stringify(blogUpdate)}`)
       await this.docClient
         .update({
-          TableName: this.todosTable,
+          TableName: this.blogsTable,
           Key: {
             userId,
-            todoId
+            blogId
           },
-          UpdateExpression: 'set #name = :name, dueDate = :dueDate, done = :done',
+          UpdateExpression: 'set #title = :title, content = :content',
           ExpressionAttributeNames: {
-            '#name': 'name'
+            '#title': 'title'
           },
           ExpressionAttributeValues: {
-            ':name': todoUpdate.name,
-            ':dueDate': todoUpdate.dueDate,
-            ':done': todoUpdate.done
+            ':title': blogUpdate.title,
+            ':content': blogUpdate.content
           }
         })
         .promise()
     }
   
-    async deleteTodoItem(userId: string, todoId: string) {
-      logger.info(`deleting todo ${todoId}`)
+    async deleteBlogItem(userId: string, blogId: string) {
+      logger.info(`deleting blog ${blogId}`)
       await this.docClient
         .delete({
-          TableName: this.todosTable,
+          TableName: this.blogsTable,
           Key: {
             userId,
-            todoId
+            blogId
           }
         })
         .promise()
     }
   
-    async updateAttachmentUrl(userId: string, todoId: string, newUrl: string) {
+    async updateAttachmentUrl(userId: string, blogId: string, newUrl: string) {
       logger.info(
-        `Updating ${newUrl} attachment URL for todo ${todoId} in table ${this.todosTable}`
+        `Updating ${newUrl} attachment URL for blog ${blogId} in table ${this.blogsTable}`
       )
   
       await this.docClient
         .update({
-          TableName: this.todosTable,
+          TableName: this.blogsTable,
           Key: {
             userId,
-            todoId
+            blogId
           },
           UpdateExpression: 'set attachmentUrl = :attachmentUrl',
           ExpressionAttributeValues: {
